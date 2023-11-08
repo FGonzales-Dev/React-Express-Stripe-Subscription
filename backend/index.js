@@ -20,11 +20,7 @@ admin.initializeApp({
 });
 
 
-app.use(
-    cors({
-        origin: "*"
-    })
-);
+app.use(cors({ origin: 'https://react-express-stripe-subscription-djgf.vercel.app/' }));
 
 
 app.use((req, res, next) => {
@@ -127,7 +123,7 @@ app.post("/api/v1/payment-success", async (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.send("GET Request Called")
+    res.send("GET Request Called 1")
 })
 
 app.listen(port, () => {
