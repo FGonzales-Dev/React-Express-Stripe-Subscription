@@ -20,7 +20,7 @@ admin.initializeApp({
 });
 
 
-app.use(cors({ credentials: true }))
+app.use(cors())
 
 const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY)
 
