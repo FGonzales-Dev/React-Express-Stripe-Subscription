@@ -26,6 +26,7 @@ app.use(
     })
 );
 
+
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
@@ -125,6 +126,9 @@ app.post("/api/v1/payment-success", async (req, res) => {
     }
 });
 
+app.get('/', (req, res) => {
+    res.send("GET Request Called")
+})
 
 app.listen(port, () => {
     console.log(`Now listening on port ${port}`);
