@@ -52,7 +52,6 @@ const Home = () => {
     fetch("https://react-express-stripe-subscription.vercel.app/api/v1/create-subscription-checkout-session", {
       method: "POST",
       headers: {
-        "Access-Control-Allow-Origin": "*", 
         "Content-Type": "application/json",
       },
       mode: "cors",
