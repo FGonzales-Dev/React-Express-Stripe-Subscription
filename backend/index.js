@@ -22,11 +22,16 @@ admin.initializeApp({
 
 app.use(
     cors({
-        origin: "*",
-        credentials: true,
-        preflightContinue: true,
+        origin: "*"
     })
 );
+
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin', 'Content-Type, Authorization');
+    next();
+});
 
 const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY)
 
