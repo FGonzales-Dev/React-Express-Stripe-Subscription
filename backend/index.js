@@ -42,8 +42,8 @@ const stripeSession = async (plan) => {
                     quantity: 1
                 },
             ],
-            success_url: "http://localhost:5173/success",
-            cancel_url: "http://localhost:5173/cancel"
+            success_url: "https://react-express-stripe-subscription-djgf.vercel.app/success",
+            cancel_url: "https://react-express-stripe-subscription-djgf.vercel.app/cancel"
         });
         return session;
     } catch (e) {
