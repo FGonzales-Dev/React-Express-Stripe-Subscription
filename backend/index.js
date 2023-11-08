@@ -23,6 +23,8 @@ admin.initializeApp({
 app.use(
     cors({
         origin: "*",
+        credentials: true,
+        preflightContinue: true,
     })
 );
 
