@@ -49,7 +49,7 @@ const Home = () => {
   }, [userId]);
 
   const checkout = (plan) => {
-    fetch("https://express-stripe-subscription-07087f04d2df.herokuapp.com/api/v1/create-subscription-checkout-session", {
+    fetch("https://react-express-stripe-subscription.vercel.app/api/v1/create-subscription-checkout-session", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
