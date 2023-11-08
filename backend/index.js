@@ -20,11 +20,7 @@ admin.initializeApp({
 });
 
 
-app.use(
-    cors({
-        origin: "https://react-express-stripe-subscription-djgf.vercel.app"
-    })
-)
+app.use(cors())
 
 const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY)
 
