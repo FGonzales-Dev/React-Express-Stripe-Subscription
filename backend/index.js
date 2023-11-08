@@ -22,7 +22,7 @@ admin.initializeApp({
 
 app.use(
     cors({
-        origin: "https://react-express-stripe-subscription-djgf.vercel.app/"
+        origin: "https://react-express-stripe-subscription-djgf.vercel.app"
     })
 )
 
