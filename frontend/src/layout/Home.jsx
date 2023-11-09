@@ -63,7 +63,8 @@ const Home = () => {
         return res.json().then((json) => Promise.reject(json));
       })
       .then(({ session }) => {
-        window.location = session.url;
+        console.log("ww"+session)
+        // window.location = session.url;
       })
       .catch((e) => {
         console.log(e);
