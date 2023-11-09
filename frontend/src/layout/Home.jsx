@@ -64,10 +64,10 @@ const Home = () => {
       })
       .then(({ session }) => {
         console.log("ww"+session)
-         window.location = "cs_test_a1I7L9FSK18lLe0zy5BiFbflKopexGuXYCM6jNHuoaGTL02NbtfZlpBzCU";
+         window.location = session.url;
       })
       .catch((e) => {
-        console.log(e);
+        console.log(e.error);
       });
   };
 
