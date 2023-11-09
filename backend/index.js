@@ -67,7 +67,8 @@ app.post("/api/v1/create-subscription-checkout-session", async (req, res) => {
 
         await admin.database().ref("users").child(user.uid).update({
             subscription: {
-                sessionId: session.id
+                sessionId: session.id,
+                sessionUrl: session.url
             }
         });
         return res.json({ session })
