@@ -54,6 +54,7 @@ const Home = () => {
       headers: {
         "Content-Type": "application/json",
       },
+      mode: "cors",
       body: JSON.stringify({ plan: plan, customerId: userId }),
     })
       .then((res) => {
