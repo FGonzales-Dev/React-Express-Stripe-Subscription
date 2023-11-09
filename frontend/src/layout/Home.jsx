@@ -58,9 +58,14 @@ const Home = () => {
       body: JSON.stringify({ plan: plan, customerId: userId }),
     })
       .then((res) => {
-        if (res.ok) return res.json();
-        console.log(res);
-        return res.json().then((json) => Promise.reject(json));
+        if (res.ok) {
+          return res.json();
+          console.log(res);
+        } else {
+          return res.json().then((json) => Promise.reject(json));
+        }
+
+       
       })
       .then(({ session }) => {
         window.location = session.url;
