@@ -19,17 +19,15 @@ admin.initializeApp({
     databaseURL: "https://stripe-subscription-prototype-default-rtdb.asia-southeast1.firebasedatabase.app"
 });
 
+app.use(cors());
 
-app.use(cors({ origin: 'https://react-express-stripe-subscription-djgf.vercel.app/' }));
-
-
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin', 'Content-Type, Authorization');
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', 'https://react-express-stripe-subscription-djgf.vercel.app/');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
     next();
 });
-
 const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY)
 
 
