@@ -74,7 +74,7 @@ app.post("/api/v1/create-subscription-checkout-session", async (req, res) => {
         return res.json({ session })
 
     } catch (error) {
-        res.send(error)
+        res.send("wewewewewe")
     }
 })
 
