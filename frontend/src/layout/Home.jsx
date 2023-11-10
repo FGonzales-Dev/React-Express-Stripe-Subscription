@@ -1,34 +1,25 @@
 import React, { useEffect, useState } from "react";
-import basic from "../assets/basic.svg";
-import pro from "../assets/pro.svg";
-import business from "../assets/business.svg";
 import firebase from "../firebase/firebaseConfig";
-
-const data = [
-  {
-    id: 1,
-    src: basic,
-    title: "Basic",
-    price: "99",
-  },
-  {
-    id: 2,
-    src: pro,
-    title: "Pro",
-    price: "499",
-  },
-  {
-    id: 3,
-    src: business,
-    title: "Business",
-    price: "999",
-  },
-];
+import {loadStripe} from '@stripe/stripe-js';
 const Home = () => {
   const [userId, setUserId] = useState("");
   const [userName, setUserName] = useState("");
-  const [planType, setPlanType] = useState("");
+  const [products, setProducts] = useState([])
 
+  // useEffect(() => {
+  //  db.collection('customers').doc(userId).collection
+  //   ("subscriptions").get().then
+  //   (snapshot => {
+  //     snapshot.forEach(subscription => {
+  //       setSubscription({
+  //         role: Subscription.data().role,
+  //         current_period_start: subscription.data().current_period_start,
+  //         current_period_end: subscription.data().current_period_end,
+  //       })
+  //     })
+  //   })
+  // })
+  const db = firebase.firestore();
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -37,40 +28,73 @@ const Home = () => {
         const userRef = firebase.database().ref("users/" + user.uid);
         userRef.on("value", (snapshot) => {
           const user = snapshot.val();
-          if (user) {
-            setPlanType(user.subscription.planType || "");
-          }
+         
         });
       } else {
         setUserId("");
         setUserName("");
       }
     });
+    db.collection('products').where('active','==',true).get().then(snapshot => {
+        const products = {}
+        snapshot.forEach(async productDoc => {
+          products[productDoc.id] = productDoc.data()
+          setProducts(products)
+          const priceSnapshot = await productDoc.ref.collection('prices').get();
+          priceSnapshot.forEach(priceDoc => {
+            products[productDoc.id].prices = {
+              priceId: priceDoc.id,
+              priceData: priceDoc.data()
+            
+            }
+          })
+        })
+    })
+ 
   }, [userId]);
 
-  const checkout = (plan) => {
-    fetch("https://react-express-stripe-subscription.vercel.app/api/v1/create-subscription-checkout-session", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      mode: "cors",
-      body: JSON.stringify({ plan: plan, customerId: userId }),
-    })
-      .then((res) => {
-        if (res.ok) return res.json();
-        console.log(res);
-        return res.json().then((json) => Promise.reject(json));
-      })
-      .then(({ session }) => {
-        console.log("ww"+session)
-         window.location = session.url;
-      })
-      .catch((e) => {
-        console.log(e.error);
-      });
-  };
+  // const checkout = (plan) => {
+  //   fetch("https://react-express-stripe-subscription.vercel.app/api/v1/create-subscription-checkout-session", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     mode: "cors",
+  //     body: JSON.stringify({ plan: plan, customerId: userId }),
+  //   })
+  //     .then((res) => {
+  //       if (res.ok) return res.json();
+  //       console.log(res);
+  //       return res.json().then((json) => Promise.reject(json));
+  //     })
+  //     .then(({ session }) => {
+  //       console.log("ww"+session)
+  //        window.location = session.url;
+  //     })
+  //     .catch((e) => {
+  //       console.log(e.error);
+  //     });
+  // };
 
+  const checkout = async(priceId) => {
+    console.log("click")
+      const  docRef = await db.collection('customers').doc(userId).collection
+      ("checkout_sessions").add({
+        price: priceId,
+        success_url:window.location.origin,
+        cancel_url: window.location.origin
+      })
+      docRef.onSnapshot(async(snap)=>{
+        const{error, sessionId} = snap.data();
+        if(error){
+          alert(error.message)
+        } 
+        if(sessionId){
+          const stripe = await loadStripe("pk_test_51O9QidC3HfduuBb8OI5QcCJU3LHyL0ehcwWKD8f2DAblpFevqnFoZoZZWMdGzBo5lufhiOoA6NFeC3t45H12K6jR001Y7PTtdm");
+          stripe.redirectToCheckout({sessionId})
+        }
+      })
+  }
   return (
     <>
       <div className="flex flex-col items-center w-full mx-auto min-h-screen diagonal-background overflow-x-hidden">
@@ -101,7 +125,17 @@ const Home = () => {
           className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-5 z-50 place-items-center w-9/12 mx-auto
         mt-20"
         >
-          {data.map((item, idx) => (
+          {Object.entries(products).map(([productId, productData]) => {
+            return (
+              <div className="plans" key={productId}> 
+                <div> {productData.name}</div>
+          
+                <button  onClick={()=> checkout("price_1O9QlfC3HfduuBb8IEGyZK9L")}>Subscribe</button>
+              </div>
+
+            )
+          })}
+          {/* {data.map((item, idx) => (
             <div
               key={idx}
               className={`bg-white px-6 py-8 rounded-xl text-[#4f7cff] w-full mx-auto grid 
@@ -136,7 +170,7 @@ const Home = () => {
                 )}
               </div>
             </div>
-          ))}
+          ))} */}
         </div>
       </div>
     </>
